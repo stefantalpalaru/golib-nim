@@ -13,6 +13,7 @@
 | declare goroutine | ``` func f(x, y int) { ``` <br> ``` println(x, y) ``` <br> ``` } ``` | ``` proc f(x, y: int) {.goroutine.} = ``` <br> ``` echo(x, " ", y) ``` |
 | launch goroutine | ``` go f(1, 2) ``` | ``` go f(1, 2) ``` |
 | special code layout | | ``` import golib ``` <br><br> ``` proc go_main() {.gomain.} = ``` <br> ``` # main code here ``` <br><br> ``` golib_main() ``` <br> ``` # not reached ``` |
+| compiler params | | ``` # nim.cfg ``` <br> ``` --threads:on ``` <br> ``` --stackTrace:off ``` <br> ``` --passC:"--std=gnu99" ``` <br> ``` --dynlibOverride:"go" ``` <br> ``` --passL:"-lgolib -lgo" ``` <br> ``` --gc:go ``` <br> ``` # or --gc:none ``` |
 
 
 ##API stability
