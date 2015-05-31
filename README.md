@@ -7,7 +7,7 @@
 | feature | Go | Nim |
 |---------|----|-----|
 | create channel | ``` c := make(chan int) ``` | ``` var c = make_chan(int) ``` |
-| send value to channel | ``` c <- 1 ``` | ``` c <- 1 ``` |
+| send value <br> to channel | ``` c <- 1 ``` | ``` c <- 1 ``` |
 | receive value from channel | ``` av := <-a ``` <br> ``` av, bv := <-a, <-b ``` | ``` var av = <-a ``` <br> ``` var (av, bv) = (<-a, <-b) ``` |
 | channel type <br> (here in a function parameter) | ``` func Send(a, b chan uint) int { ``` | ``` proc Send(a, b: chan[uint]): int = ``` |
  
