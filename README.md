@@ -6,7 +6,7 @@
 
 | feature | Go | Nim |
 |---------|----|-----|
-| channel type <br> (here in a function <br> parameter) | ``` func S(a, b chan uint) int { ``` | ``` proc S(a, b: chan[uint]): int = ``` |
+| channel type <br> (here in a <br> function <br> parameter) | ``` func S(a, b chan uint) int { ``` | ``` proc S(a, b: chan[uint]): int = ``` |
 | create channel | ``` c := make(chan int) ``` <br> ``` c2 := make(chan int, 1) ``` | ``` var c = make_chan(int) ``` <br> ``` var c2 = make_chan(int, 1) ``` |
 | send value <br> to channel | ``` c <- 1 ``` | ``` c <- 1 ``` |
 | receive value <br> from channel | ``` av := <-a ``` <br> ``` av, bv := <-a, <-b ``` <br> ``` cv, ok := <-c ``` | ``` var av = <-a ``` <br> ``` var (av, bv) = (<-a, <-b) ``` <br> ``` var (cv, ok) = <--c ``` |
