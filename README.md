@@ -6,10 +6,10 @@
 
 | feature | Go | Nim |
 |---------|----|-----|
+| channel type <br> (here in a function <br> parameter) | ``` func S(a, b chan uint) int { ``` | ``` proc S(a, b: chan[uint]): int = ``` |
 | create channel | ``` c := make(chan int) ``` <br> ``` c2 := make(chan int, 1) ``` | ``` var c = make_chan(int) ``` <br> ``` var c2 = make_chan(int, 1) ``` |
 | send value <br> to channel | ``` c <- 1 ``` | ``` c <- 1 ``` |
 | receive value <br> from channel | ``` av := <-a ``` <br> ``` av, bv := <-a, <-b ``` <br> ``` cv, ok := <-c ``` | ``` var av = <-a ``` <br> ``` var (av, bv) = (<-a, <-b) ``` <br> ``` var (cv, ok) = <--c ``` |
-| channel type <br> (here in a function <br> parameter) | ``` func S(a, b chan uint) int { ``` | ``` proc S(a, b: chan[uint]): int = ``` |
 | declare goroutine | ``` func f(x, y int) { ``` <br> ``` println(x, y) ``` <br> ``` } ``` | ``` proc f(x, y: int) {.goroutine.} = ``` <br> ``` echo(x, " ", y) ``` |
 | launch goroutine | ``` go f(1, 2) ``` | ``` go f(1, 2) ``` |
 | special code layout | | ``` import golib ``` <br><br> ``` proc go_main() {.gomain.} = ``` <br> ``` # main code here ``` <br><br> ``` golib_main() ``` <br> ``` # not reached ``` |
