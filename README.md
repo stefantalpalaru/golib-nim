@@ -11,7 +11,8 @@
 | receive value <br> from channel | ``` av := <-a ``` <br> ``` av, bv := <-a, <-b ``` | ``` var av = <-a ``` <br> ``` var (av, bv) = (<-a, <-b) ``` |
 | channel type <br> (here in a function <br> parameter) | ``` func S(a, b chan uint) int { ``` | ``` proc S(a, b: chan[uint]): int = ``` |
 | declare goroutine | ``` func f(x, y int) { ``` <br> ``` println(x, y) ``` <br> ``` } ``` | ``` proc f(x, y: int) {.goroutine.} = ``` <br> ``` echo(x, " ", y) ``` |
- 
+| launch goroutine | ``` go f(1, 2) ``` | ``` go f(1, 2) ``` |
+
 
 ##API stability
 
