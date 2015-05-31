@@ -9,6 +9,12 @@
 | create channel | ``` c := make(chan int) ``` | ``` var c = make_chan(int) ``` |
 | send value to channel | ``` c <- 1 ``` | ``` c <- 1 ``` |
 | receive value from channel | ``` av := <-a ``` <br> ``` av, bv := <-a, <-b ``` | ``` var av = <-a ``` <br> ``` var (av, bv) = (<-a, <-b) ``` |
+| channel type (here in a function parameter) | ``` func Send(a, b chan uint) int { ``` | ``` proc Send(a, b: chan[uint]): int = ``` |
+ 
+
+##API stability
+
+The API is subject to change until the first version (0.0.1) is released. After this, backwards compatibility will become a priority.
 
 ##requirements
 
@@ -43,10 +49,6 @@ make
 ```sh
 nimble install
 ```
-
-##API stability
-
-The API is subject to change until the first version (0.0.1) is released. After this, backwards compatibility will become a priority.
 
 ##license
 
