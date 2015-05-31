@@ -7,6 +7,8 @@
 | feature | Go | Nim |
 |---------|----|-----|
 | create channel | ``` c := make(chan int) ``` | ``` var c = make_chan(int) ``` |
+| send value to channel | ``` c <- 1 ``` | ``` c <- 1 ``` |
+| receive value from channel | ``` av := <-a ``` <br> ``` av, bv := <-a, <-b ``` | ``` var av = <-a ``` <br> ``` var (av, bv) = (<-a, <-b) ``` |
 
 ##requirements
 
