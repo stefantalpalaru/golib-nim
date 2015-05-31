@@ -193,7 +193,7 @@ macro go*(c: expr): expr {.immediate.} =
             )
         )
         for i in 1..(len(c) - 1):
-            result.last()[0][1][0][1].add(copyNimTree(c[i]))
+            result.last()[0][1][0][1].add(c[i])
         if len(c) == 2:
             ## there's a single param and we can't assign (val) to a tuple without using the form (name: val)
             ## which we can't do in the 'go' macro, so add a second param
@@ -216,7 +216,7 @@ macro go*(c: expr): expr {.immediate.} =
             )
         )
         for i in 1..(len(c) - 1):
-            result.last()[1].add(copyNimTree(c[i]))
+            result.last()[1].add(c[i])
         if len(c) == 2:
             ## there's a single param and we can't assign (val) to a tuple without using the form (name: val)
             ## which we can't do in the 'go' macro, so add a second param

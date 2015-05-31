@@ -1,4 +1,4 @@
-%: %.nim nim.cfg
+%: %.nim nim.cfg src/golib.nim
 	$(NIM) c $<
 
 check_DATA = tests/bug234 \
