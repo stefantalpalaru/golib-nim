@@ -6,7 +6,15 @@
 
 | feature | Go | Nim |
 |---------|----|-----|
-| create channel | c := make(chan int) | var c = make_chan(int) |
+| create channel |
+```go
+c := make(chan int)
+```
+|
+```nimrod
+var c = make_chan(int)
+```
+|
 
 ##requirements
 
