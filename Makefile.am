@@ -21,6 +21,7 @@ EXTRA_DIST := tests/*.go \
 	tests/*.nim \
 	tests/*/*.nim \
 	benchmarks/*.nim \
+	benchmarks/*.nim.cfg \
 	autogen.sh \
 	nim.cfg.in \
 	LICENSE \
