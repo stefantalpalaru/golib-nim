@@ -14,6 +14,7 @@
 | channel select | ``` select { ``` <br> ``` case c0 <- 0: ``` <br> ``` case <-c1: ``` <br> ``` case i2 = <-c2: ``` <br> ``` case i3, ok3 = <-c3: ``` <br> ``` case li[0] = <-c4: ``` <br> ``` case li[f()] = <-c5: ``` <br> ``` default: ``` <br> ``` break LOOP ``` <br> ``` } ``` | ``` select: ``` <br> ``` scase c0 <- 0: discard ``` <br> ``` scase <-c1: discard ``` <br> ``` scase (i2 = <-c2): discard ``` <br> ``` scase ((i3, ok3) = <--c3): discard ``` <br> ``` scase (li[0] = <-c4): discard ``` <br> ``` scase (li[f()] = <-c5): discard ``` <br> ``` default: ``` <br> ``` break LOOP ``` |
 | declare goroutine | ``` func f(x, y int) { ``` <br> ``` println(x, y) ``` <br> ``` } ``` | ``` proc f(x, y: int) {.goroutine.} = ``` <br> ``` echo(x, " ", y) ``` |
 | launch goroutine | ``` go f(1, 2) ``` | ``` go f(1, 2) ``` |
+| lambda goroutine | ``` go func(c chan int) { c <- 1 }(right) ``` | ``` TODO ``` |
 | non-blocking <br> sleep | ``` time.Sleep(100 * time.Millisecond) ``` | ``` go_sleep_ms(100) ``` |
 | yield to another <br> goroutine | runtime.Gosched() | ``` go_yield() ``` |
 | run the goroutines <br> on all the available <br> CPU cores | ``` runtime.GOMAXPROCS( runtime.NumCPU()) ``` | ``` runtime_gomaxprocsfunc( runtime_ncpu) ``` |
