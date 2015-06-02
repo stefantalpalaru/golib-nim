@@ -2,8 +2,8 @@
 --stackTrace:off
 -p:"./src"
 #-p:"$lib/packages/golib"
---passC:"--std=gnu99"
-#--passC:"--std=gnu99 -ggdb -O2"
+--passC:"--std=gnu99 -fsplit-stack"
+#--passC:"--std=gnu99 -fsplit-stack -ggdb -O2"
 --dynlibOverride:"go"
 --passL:"-lgolib -lgo"
 --gc:@NIMGC@

@@ -4,6 +4,7 @@
 check_DATA = tests/bug234 \
 			 tests/select \
 			 tests/select7 \
+			 tests/peano \
 			 tests/select_custom \
 			 tests/gc/gcbench \
 			 tests/gc/gctest
