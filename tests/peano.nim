@@ -7,9 +7,6 @@ type
     Number = ref object
         n: Number
 
-# converter Number_to_object(n: Number): object =
-    # result = cast[object](n)
-
 # -------------------------------------
 # Peano primitives
 
