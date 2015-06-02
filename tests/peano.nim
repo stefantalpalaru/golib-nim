@@ -99,6 +99,7 @@ var results = [
 ]
 
 proc go_main() {.gomain.} =
+    init()
     for i in 0..9:
         if (var f = count(fact(gen(i))); f != results[i]):
             echo("FAIL: ", i, " !: ", f, " != ", results[i])
