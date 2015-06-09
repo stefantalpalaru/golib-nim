@@ -164,7 +164,7 @@ proc go_main() {.gomain.} =
   var elapsed = epochTime() - t
   PrintDiagnostics()
   echo("Completed in " & $elapsed & "ms. Success!")
-  # writeln(stdout, GC_getStatistics())
 
 golib_main()
 # not reached
+

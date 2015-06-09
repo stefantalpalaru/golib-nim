@@ -65,5 +65,18 @@ nimcache
 /tests/peano
 /tests/gc/gcbench
 /tests/gc/gctest
+/tests/gc/bintrees
+/tests/gc/closureleak
+/tests/gc/cyclecollector
+/tests/gc/cycleleak
+/tests/gc/gcleak
+/tests/gc/gcleak2
+/tests/gc/gcleak3
+/tests/gc/gcleak4
+/tests/gc/gcleak5
+/tests/gc/growobjcrash
+/tests/gc/refarrayleak
+/tests/gc/stackrefleak
+/tests/gc/weakrefs
 /nim.cfg
 

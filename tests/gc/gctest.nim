@@ -179,11 +179,10 @@ proc main() =
   writeln(stdout, s[89])
   write(stdout, "done!\n")
 
-var
+proc go_main() {.gomain.} =
+  var
     father: TBNode
     s: string
-
-proc go_main() {.gomain.} =
   s = ""
   s = ""
   writeln(stdout, repr(caseTree()))
@@ -206,3 +205,4 @@ proc go_main() {.gomain.} =
 
 golib_main()
 # not reached
+
