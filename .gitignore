@@ -77,6 +77,6 @@ nimcache
 /tests/gc/growobjcrash
 /tests/gc/refarrayleak
 /tests/gc/stackrefleak
-/tests/gc/weakrefs
+/tests/tnew
 /nim.cfg
 

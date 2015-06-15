@@ -2,7 +2,7 @@
 	$(NIM) c $<
 
 check_DATA = tests/bug234 \
-			 tests/gc/weakrefs \
+			 tests/tnew \
 			 tests/select \
 			 tests/select7 \
 			 tests/peano \
