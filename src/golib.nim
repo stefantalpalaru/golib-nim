@@ -63,7 +63,6 @@ proc chan_send*(a2: pointer; a3: pointer) {.cdecl, importc: "chan_send", header:
 proc chan_recv*(a2: pointer): pointer {.cdecl, importc: "chan_recv", header: "<golib/golib.h>".}
 proc chan_recv2*(a2: pointer): chan_recv2_result {.cdecl, importc: "chan_recv2", header: "<golib/golib.h>".}
 proc chan_close*(a2: pointer) {.cdecl, importc: "chan_close", header: "<golib/golib.h>".}
-proc chan_dispose*(a2: pointer) {.cdecl, importc: "chan_dispose", header: "<golib/golib.h>".}
 proc chan_select*(a2: ptr chan_select_case; a3: cint): chan_select_result {.cdecl, importc: "chan_select", header: "<golib/golib.h>".}
 proc go_sleep_ms*(a2: int64) {.cdecl, importc: "go_sleep_ms", header: "<golib/golib.h>".}
 
@@ -280,13 +279,8 @@ proc to_string*(x: chan_select_case, T: typedesc): string =
 
 ## public chan API
 
-proc chan_finalizer[T](c: chan[T]) =
-    var real_chan = c.get_chan()
-    if real_chan != nil:
-        chan_dispose(real_chan)
-
 proc make_chan*(T: typedesc, n: cint = 0): chan[T] =
-    new(result, chan_finalizer)
+    new(result)
     result.real_chan = chan_make(n)
     result.capacity = n
 
