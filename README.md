@@ -28,7 +28,7 @@ The API is subject to change until the first version (0.0.1) is released. After 
 ##requirements
 
 - [golib][2]
-- [a Nim fork with the Go GC][3] if you want garbage collection in Nim
+- Nim HEAD
 
 ##build the benchmark and run tests
 
@@ -72,5 +72,4 @@ BSD-2
 
 [1]: http://nim-lang.org/
 [2]: https://github.com/stefantalpalaru/golib
-[3]: https://github.com/stefantalpalaru/Nim
 
