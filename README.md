@@ -35,9 +35,9 @@ The API is subject to change until the first version (0.0.1) is released. After 
 ```sh
 ./autogen.sh
 ```
-If you have a Nim branch with the Go GC in ../Nim\_gogc/:
+If you have a Nim repo in ../Nim/:
 ```sh
-./configure NIM=../Nim_gogc/bin/nim
+./configure NIM=../Nim/bin/nim
 ```
 Or with vanilla Nim and no GC:
 ```sh
