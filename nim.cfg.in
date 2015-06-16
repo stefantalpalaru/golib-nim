@@ -2,7 +2,7 @@
 --stackTrace:off
 -p:"./src"
 #-p:"$lib/packages/golib"
--d:release
+#-d:release
 --passC:"--std=gnu99 -fsplit-stack"
 #--passC:"--std=gnu99 -fsplit-stack -ggdb -O2"
 #--passC:"--std=gnu99 -fsplit-stack -ggdb"
