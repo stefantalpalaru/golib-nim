@@ -39,7 +39,7 @@ If you have a Nim repo in ../Nim/:
 ```sh
 ./configure NIM=../Nim/bin/nim
 ```
-Or with vanilla Nim and no GC:
+Or with the system-wide Nim and no GC (some tests and benchmarks will fail without the Go GC):
 ```sh
 ./configure --disable-gogc
 ```
