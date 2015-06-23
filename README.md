@@ -21,6 +21,8 @@
 | special code <br> layout | | ``` import golib ``` <br><br> ``` proc go_main() {.gomain.} = ``` <br> ``` # main code here ``` <br><br> ``` golib_main() ``` <br> ``` # not reached ``` |
 | compiler <br> parameters | | ``` # nim.cfg ``` <br> ``` --threads:on ``` <br> ``` --stackTrace:off ``` <br> ``` --passC:"--std=gnu99 -fsplit-stack" ``` <br> ``` --dynlibOverride:"go" ``` <br> ``` --passL:"-lgolib -lgo" ``` <br> ``` --gc:go ``` <br> ``` # or --gc:none ``` |
 
+The initialization of the Go runtime (including the GC) is done in golib_main(), after which go_main() is launched as a goroutine and the main event loop is started. That's why you can't do heap memory allocation before go_main() runs and also why anything after golib_main() won't be reached - the event loop ends the program when go_main() exits.
+
 ##API stability
 
 The API is subject to change until the first version (0.0.1) is released. After this, backwards compatibility will become a priority.
