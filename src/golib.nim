@@ -24,31 +24,31 @@
 
 import macros, strutils, typetraits
 
-const 
+const
     SELECT_DIR_SEND* = 1
     SELECT_DIR_RECV* = 2
     SELECT_DIR_DEFAULT* = 3
 
-type 
+type
     ## work around nimbase.h not looking for _Bool when defining NIM_BOOL
     ## this may require --passC:"--std=gnu99" (or c99, or a more recent standard) in the .cfg file
     cbool {.importc: "_Bool", nodecl.} = bool
 
     goroutine_type* = proc (x: pointer) {.cdecl.}
 
-    chan_select_case* {.importc: "chan_select_case".} = object 
+    chan_select_case* {.importc: "chan_select_case".} = object
         dir*: cuint
         chan*: pointer
         send*: pointer
 
     chan_select_cases*{.unchecked.} = array[0..0, chan_select_case]
 
-    chan_select_result* {.importc: "chan_select_result".} = object 
+    chan_select_result* {.importc: "chan_select_result".} = object
         chosen*: cint
         recv*: pointer
         recv_ok*: cbool
 
-    chan_recv2_result* {.importc: "chan_recv2_result".} = object 
+    chan_recv2_result* {.importc: "chan_recv2_result".} = object
         recv*: pointer
         ok*: cbool
 
@@ -316,6 +316,14 @@ proc `<--`*[T](c: chan[T]): (T, bool) =
 proc close*[T](c: chan[T]) =
     chan_close(c.get_chan)
 
+iterator items*[A](ch: chan[A]): A =
+    var a: A
+    var ok = true
+    while ok:
+        (a, ok) = <-- ch
+        if ok:
+            yield a
+
 macro select*(s: stmt): stmt {.immediate.} =
     # echo treeRepr(s)
     result = newStmtList()
@@ -339,7 +347,7 @@ macro select*(s: stmt): stmt {.immediate.} =
         send_var_statements: seq[NimNode] = @[]
         select_cases: seq[NimNode] = @[]
         case_branches: seq[NimNode] = @[]
-    
+
     for scase in s.children:
         inc scase_no
         if (scase.kind in {nnkCommand, nnkCall} and $(scase[0]) == "scase") or (scase.kind == nnkInfix and $(scase[1]) == "scase"):
