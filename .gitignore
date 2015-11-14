@@ -62,6 +62,7 @@ nimcache
 /tests/select
 /tests/select7
 /tests/select_custom
+/tests/sieve1
 /tests/peano
 /tests/gc/gcbench
 /tests/gc/gctest
