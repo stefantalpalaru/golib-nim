@@ -316,13 +316,13 @@ proc `<--`*[T](c: chan[T]): (T, bool) =
 proc close*[T](c: chan[T]) =
     chan_close(c.get_chan)
 
-iterator items*[A](ch: chan[A]): A =
-    var a: A
+iterator items*[T](c: chan[T]): T =
+    var m: T
     var ok = true
     while ok:
-        (a, ok) = <-- ch
+        (m, ok) = <--c
         if ok:
-            yield a
+            yield m
 
 macro select*(s: stmt): stmt {.immediate.} =
     # echo treeRepr(s)

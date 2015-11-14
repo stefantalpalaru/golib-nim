@@ -7,6 +7,7 @@ check_DATA = tests/bug234 \
 			 tests/select7 \
 			 tests/peano \
 			 tests/select_custom \
+			 tests/sieve1 \
 			 tests/gc/gcbench \
 			 tests/gc/gctest \
 			 tests/gc/bintrees \
