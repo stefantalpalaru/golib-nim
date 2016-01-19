@@ -31,7 +31,7 @@ The API is subject to change until the first version (0.0.1) is released. After 
 ##requirements
 
 - [golib][2]
-- Nim >=0.12.0
+- Nim >=0.13.0
 
 ##build the benchmark and run tests
 

@@ -421,6 +421,9 @@ macro select*(s: stmt): stmt {.immediate.} =
                 if scase.kind == nnkInfix:
                     channel = scase[2]
                     statements = scase[3]
+                elif scase[1].kind == nnkPrefix:
+                    channel = scase[1][1]
+                    statements = scase[2]
                 else:
                     channel = scase[1][1][1]
                     statements = scase[2]
