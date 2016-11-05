@@ -78,7 +78,7 @@ proc count_params(prc: NimNode): int {.compileTime.} =
         if i.kind == nnkIdentDefs:
             result += i.len - 2
 
-macro goroutine*(prc: stmt): stmt {.immediate.} =
+macro goroutine*(prc: untyped): untyped =
     # echo treeRepr(prc)
     result = prc
     ## checks
@@ -140,7 +140,7 @@ macro goroutine*(prc: stmt): stmt {.immediate.} =
     addIdentIfAbsent(prc[4], "cdecl")
     # echo treeRepr(result)
 
-macro gomain*(prc: stmt): stmt {.immediate.} =
+macro gomain*(prc: untyped): untyped =
     result = prc
     ## save it in the global var so we can insert it in golib_main
     gomain_proc = $prc[0]
@@ -156,16 +156,18 @@ macro gomain*(prc: stmt): stmt {.immediate.} =
         )
     )
 
-template golib_main*(): expr =
+macro call_gomain_proc(): untyped = newCall(ident(gomain_proc))
+
+template golib_main*(): untyped =
     var
         cmdCount {.importc.}: cint
         cmdLine {.importc.}: cstringArray
     golib_main_proc(cmdCount, cmdLine)
     ## avoid the XDeclaredButNotUsed hint and the need for --deadCodeElim:off
     ## (not reached during execution)
-    emit(gomain_proc & "()\n")
+    call_gomain_proc()
 
-macro go*(c: expr): expr {.immediate.} =
+macro go*(c: untyped): untyped =
     # echo treeRepr(c)
     if len(c) == 1:
         c.insert(0, ident("go_go"))
@@ -324,7 +326,7 @@ iterator items*[T](c: chan[T]): T =
         if ok:
             yield m
 
-macro select*(s: stmt): stmt {.immediate.} =
+macro select*(s: untyped): untyped =
     # echo treeRepr(s)
     result = newStmtList()
     var rw_scases, default_scases: int

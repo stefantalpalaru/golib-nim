@@ -99,7 +99,7 @@ proc PrintDiagnostics() =
 
 proc TimeConstruction(depth: int) =
   var
-    root, tempTree: PNode
+    tempTree: PNode
     iNumIters: int
 
   iNumIters = NumIters(depth)
@@ -125,7 +125,7 @@ proc go_main() {.gomain.} =
     GC_setMaxPause 2_000
 
   var
-    root, longLivedTree, tempTree: PNode
+    longLivedTree, tempTree: PNode
     myarray: tMyArray
 
   echo("Garbage Collector Test")

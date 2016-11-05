@@ -26,11 +26,11 @@ proc go_main() {.gomain.} =
         while true:
             select:
                 scase <-c1: discard
-                scase (i2 = <-c2): discard
-                scase ((i3, ok3) = <--c3): discard
-                scase (li[0] = <-c4): discard
-                scase (li[f()] = <-c5): discard
-                scase (i6 = <-c6): discard
+                scase(i2 = <-c2): discard
+                scase((i3, ok3) = <--c3): discard
+                scase(li[0] = <-c4): discard
+                scase(li[f()] = <-c5): discard
+                scase(i6 = <-c6): discard
                 default:
                     break LOOP
     # echo ($i2, " ", $i3, " ", $ok3, " ", $li[0], " ", $li[1], " ", $i6)

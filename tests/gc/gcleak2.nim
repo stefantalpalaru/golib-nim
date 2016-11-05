@@ -8,7 +8,7 @@ when defined(GC_setMaxPause):
   GC_setMaxPause 2_000
 
 type
-  TTestObj = object of TObject
+  TTestObj = object of RootObj
     x: string
     s: seq[int]
 

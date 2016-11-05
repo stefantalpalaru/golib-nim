@@ -31,7 +31,7 @@ type
     of nkList: sons: seq[PCaseNode]
     else: unused: seq[string]
 
-  TIdObj* = object of TObject
+  TIdObj* = object of RootObj
     id*: int  # unique id; use this for comparisons and not the pointers
   
   PIdObj* = ref TIdObj
@@ -63,12 +63,11 @@ proc caseTree(lvl: int = 0): PCaseNode =
   if lvl == 3: result = newCaseNode("data item")
   else: result = newCaseNode(caseTree(lvl+1), caseTree(lvl+1))
 
-proc finalizeBNode(n: TBNode) = writeln(stdout, n.data)
 proc finalizeNode(n: PNode) =
   assert(n != nil)
   write(stdout, "finalizing: ")
-  if isNil(n.data): writeln(stdout, "nil!")
-  else: writeln(stdout, n.data)
+  if isNil(n.data): writeline(stdout, "nil!")
+  else: writeline(stdout, n.data)
 
 var
   id: int = 1
@@ -82,7 +81,7 @@ proc buildTree(depth = 1): PNode =
   inc(id)
 
 proc returnTree(): PNode =
-  writeln(stdout, "creating id: " & $id)
+  writeline(stdout, "creating id: " & $id)
   new(result, finalizeNode)
   result.data = $id
   new(result.le, finalizeNode)
@@ -92,26 +91,26 @@ proc returnTree(): PNode =
   inc(id)
 
   # now create a cycle:
-  writeln(stdout, "creating id (cyclic): " & $id)
+  writeline(stdout, "creating id (cyclic): " & $id)
   var cycle: PNode
   new(cycle, finalizeNode)
   cycle.data = $id
   cycle.le = cycle
   cycle.ri = cycle
   inc(id)
-  #writeln(stdout, "refcount: " & $refcount(cycle))
-  #writeln(stdout, "refcount le: " & $refcount(cycle.le))
-  #writeln(stdout, "refcount ri: " & $refcount(cycle.ri))
+  #writeline(stdout, "refcount: " & $refcount(cycle))
+  #writeline(stdout, "refcount le: " & $refcount(cycle.le))
+  #writeline(stdout, "refcount ri: " & $refcount(cycle.ri))
 
 proc printTree(t: PNode) =
   if t == nil: return
-  writeln(stdout, "printing")
-  writeln(stdout, t.data)
+  writeline(stdout, "printing")
+  writeline(stdout, t.data)
   printTree(t.le)
   printTree(t.ri)
 
 proc unsureNew(result: var PNode) =
-  writeln(stdout, "creating unsure id: " & $id)
+  writeline(stdout, "creating unsure id: " & $id)
   new(result, finalizeNode)
   result.data = $id
   new(result.le, finalizeNode)
@@ -176,7 +175,7 @@ proc main() =
   var s: seq[string] = @[]
   for i in 1..100:
     add s, "hohoho" # test reallocation
-  writeln(stdout, s[89])
+  writeline(stdout, s[89])
   write(stdout, "done!\n")
 
 proc go_main() {.gomain.} =
@@ -185,7 +184,7 @@ proc go_main() {.gomain.} =
     s: string
   s = ""
   s = ""
-  writeln(stdout, repr(caseTree()))
+  writeline(stdout, repr(caseTree()))
   father.t.data = @["ha", "lets", "stress", "it"]
   father.t.data = @["ha", "lets", "stress", "it"]
   var t = buildTree()
@@ -200,7 +199,7 @@ proc go_main() {.gomain.} =
   # the M&S GC fails with this call and it's unclear why. Definitely something
   # we need to fix!
   GC_fullCollect()
-  writeln(stdout, GC_getStatistics())
+  writeline(stdout, GC_getStatistics())
   write(stdout, "finished\n")
 
 golib_main()

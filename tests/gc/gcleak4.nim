@@ -9,7 +9,6 @@ when defined(GC_setMaxPause):
 
 type
   TExpr = object {.inheritable.} ## abstract base class for an expression
-  PLiteral = ref TLiteral
   TLiteral = object of TExpr
     x: int
     op1: string
@@ -17,7 +16,7 @@ type
     a, b: ref TExpr
     op2: string
     
-method eval(e: ref TExpr): int =
+method eval(e: ref TExpr): int {.base.} =
   # override this base method
   quit "to override!"
 

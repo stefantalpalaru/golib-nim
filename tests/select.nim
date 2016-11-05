@@ -1,4 +1,4 @@
-import golib, unsigned
+import golib
 
 var
     counter: uint

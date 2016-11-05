@@ -39,7 +39,7 @@ proc go_main() {.gomain.} =
   var longLivedTree = makeTree(0, maxDepth)
 
   var iterations = 1 shl maxDepth
-  for depth in countup (minDepth, stretchDepth-1, 2):
+  for depth in countup(minDepth, stretchDepth-1, 2):
     var check = 0
     for i in 1..iterations:
       check += checkTree(makeTree(i, depth)) + checkTree(makeTree(-i, depth))
