@@ -79,6 +79,7 @@ dumpTree:
     ok3 = res.recv_ok
     li[0] = cast[ptr type(li[0])](res.recv)[]
     li[f()] = cast[ptr type(li[f()])](res.recv)[]
+    # static: doAssert(compiles((a, b) = <--c), "- the type must be 'chan' or 'recv_chan'")
 
 
 proc f6(args: pointer): int =

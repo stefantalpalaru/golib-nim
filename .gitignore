@@ -79,5 +79,6 @@ nimcache
 /tests/gc/refarrayleak
 /tests/gc/stackrefleak
 /tests/tnew
+/tests/perm
 /nim.cfg
 

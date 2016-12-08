@@ -238,7 +238,8 @@ type
         real_chan: pointer
         capacity: cint
     chan*[T] = ref chan_internal[T]
-    # <-chan*[T] = chan[T]
+    send_chan*[T] = distinct chan[T]
+    recv_chan*[T] = distinct chan[T]
     chan_recv2_result_typed*[T] = object
         recv*: T
         ok*: bool
@@ -251,6 +252,12 @@ proc get_chan*[T](c: chan[T]): pointer =
     else:
         result = c.real_chan
 
+proc get_chan*[T](c: send_chan[T]): pointer =
+    result = chan[T](c).get_chan()
+
+proc get_chan*[T](c: recv_chan[T]): pointer =
+    result = chan[T](c).get_chan()
+
 ## converters
 
 converter int_to_cint*(i: int): cint =
@@ -259,6 +266,12 @@ converter int_to_cint*(i: int): cint =
 converter ref_to_pointer*[T](x: ref T): pointer =
     result = cast[pointer](x)
 
+converter chan_to_send_chan*[T](c: chan[T]): send_chan[T] =
+    result = send_chan[T](c)
+
+converter chan_to_recv_chan*[T](c: chan[T]): recv_chan[T] =
+    result = recv_chan[T](c)
+
 ## debugging helpers
 
 proc `$`*[T](c: chan[T]): string =
@@ -266,6 +279,12 @@ proc `$`*[T](c: chan[T]): string =
         result = "chan($#): nil" % T.name
     else:
         result = "chan($#, $#): $#" % [T.name, $(c.capacity), $(cast[uint](c.get_chan))]
+
+proc `$`*[T](c: send_chan[T]): string =
+    result = "send_" & $(chan[T](c))
+
+proc `$`*[T](c: recv_chan[T]): string =
+    result = "recv_" & $(chan[T](c))
 
 proc `$`*(x: chan_select_case): string =
     var direction: array[1..3, string] = ["SEND", "RECV", "DEFAULT"]
@@ -292,14 +311,26 @@ proc send*[T](c: chan[T], m: T) =
     deepCopy(m_copy[], m)
     chan_send(c.get_chan, cast[pointer](m_copy))
 
+proc send*[T](c: send_chan[T], m: T) =
+    chan[T](c).send(m)
+
 proc `<-`*[T](c: chan[T], m: T) =
     c.send(m)
+
+proc `<-`*[T](c: send_chan[T], m: T) =
+    chan[T](c) <- m
 
 proc recv*[T](c: chan[T]): ref T {.discardable.} =
     result = cast[ref T](chan_recv(c.get_chan))
 
+proc recv*[T](c: recv_chan[T]): ref T {.discardable.} =
+    result = chan[T](c).recv()
+
 proc `<-`*[T](c: chan[T]): T {.discardable.} =
     result = c.recv()[]
+
+proc `<-`*[T](c: recv_chan[T]): T {.discardable.} =
+    result = <- chan[T](c)
 
 proc recv2*[T](c: chan[T]): chan_recv2_result_typed[T] =
     var
@@ -311,12 +342,21 @@ proc recv2*[T](c: chan[T]): chan_recv2_result_typed[T] =
         result.recv = recv[]
     result.ok = res.ok
 
+proc recv2*[T](c: recv_chan[T]): chan_recv2_result_typed[T] =
+    result = chan[T](c).recv2()
+
 proc `<--`*[T](c: chan[T]): (T, bool) =
     var res = c.recv2()
     result = (res.recv, res.ok)
 
+proc `<--`*[T](c: recv_chan[T]): (T, bool) =
+    result = <-- chan[T](c)
+
 proc close*[T](c: chan[T]) =
     chan_close(c.get_chan)
+
+proc close*[T](c: send_chan[T]) =
+    chan[T](c).close()
 
 iterator items*[T](c: chan[T]): T =
     var m: T
@@ -325,6 +365,10 @@ iterator items*[T](c: chan[T]): T =
         (m, ok) = <--c
         if ok:
             yield m
+
+iterator items*[T](c: recv_chan[T]): T =
+    for m in chan[T](c):
+        yield m
 
 macro select*(s: untyped): untyped =
     # echo treeRepr(s)
@@ -353,6 +397,27 @@ macro select*(s: untyped): untyped =
     for scase in s.children:
         inc scase_no
         if (scase.kind in {nnkCommand, nnkCall} and $(scase[0]) == "scase") or (scase.kind == nnkInfix and $(scase[1]) == "scase"):
+            ## a send_chan would skirt type checking by passing a pointer to the C function selecting it for receiving
+            ## let's make sure that everything in an 'scase' statement is compilable, or fail at compile time otherwise
+            ## static: doAssert(compiles(...), "message")
+            var test_expr = scase[1]
+            if scase[1].kind == nnkExprEqExpr:
+                # it seems compiles() fails with assignments, so just check the right hand side
+                test_expr = scase[1][1]
+            result.add(
+                newNimNode(nnkStaticStmt).add(
+                    newNimNode(nnkStmtList).add(
+                        newCall(
+                            "doAssert",
+                            newCall(
+                                "compiles",
+                                test_expr
+                            ),
+                            newStrLitNode("- scase does not compile - $1: '$2'" % [scase.lineinfo, repr(test_expr)])
+                        )
+                    )
+                )
+            )
             if scase[1].kind == nnkInfix and $(scase[1][0]) == "<-":
                 ## send to channel
                 var

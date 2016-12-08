@@ -1,15 +1,15 @@
 import golib
 
 
-proc recv1(c: chan[int]) {.goroutine.} =
+proc recv1(c: recv_chan[int]) {.goroutine.} =
     <-c
 
-proc recv2(c: chan[int]) {.goroutine.} =
+proc recv2(c: recv_chan[int]) {.goroutine.} =
     select:
         scase <-c:
             discard
 
-proc recv3(c: chan[int]) {.goroutine.} =
+proc recv3(c: recv_chan[int]) {.goroutine.} =
     var c2 = make_chan(int)
     select:
         scase <-c:
