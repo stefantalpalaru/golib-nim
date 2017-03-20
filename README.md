@@ -1,8 +1,8 @@
-##description
+## description
 
 [Nim language][1] bindings for [golib][2] - a library that (ab)uses gccgo to bring Go's channels and goroutines to the rest of the world.
 
-##syntax comparison
+## syntax comparison
 
 | feature | Go | Nim |
 |---------|----|-----|
@@ -24,16 +24,16 @@
 
 The initialization of the Go runtime (including the GC) is done in golib_main(), after which go_main() is launched as a goroutine and the main event loop is started. That's why you can't do heap memory allocation before go_main() runs and also why anything after golib_main() won't be reached - the event loop ends the program when go_main() exits.
 
-##API stability
+## API stability
 
 The API is subject to change until the first version (0.0.1) is released. After this, backwards compatibility will become a priority.
 
-##requirements
+## requirements
 
 - [golib][2]
 - Nim >=0.13.0
 
-##build the benchmark and run tests
+## build the benchmark and run tests
 
 ```sh
 ./autogen.sh
@@ -56,17 +56,17 @@ make
 /usr/bin/time -v ./benchmarks/cw_nim
 ```
 
-##install
+## install
 
 ```sh
 nimble install
 ```
 
-##license
+## license
 
 BSD-2
 
-##credits
+## credits
 
 - author: Ștefan Talpalaru <stefantalpalaru@yahoo.com>
 
