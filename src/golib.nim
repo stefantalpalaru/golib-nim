@@ -1,4 +1,4 @@
-# Copyright (c) 2015, Ștefan Talpalaru <stefantalpalaru@yahoo.com>
+# Copyright (c) 2015-2017, Ștefan Talpalaru <stefantalpalaru@yahoo.com>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -71,7 +71,8 @@ var
     gomain_proc {.compileTime.}: string
 
 proc get_proc_args_tuple_ref(prc: NimNode): NimNode {.compileTime.} =
-    result = ident(prc.lineinfo.replace('.', '_').replace('(', '_').replace(',', '_').replace(')', '_') & $prc[0] & "_args_tuple_ref_for_goroutine")
+    result = ident(prc.lineinfo.replace('.', '_').replace('(', '_')
+        .replace(',', '_').replace(')', '_') & $prc[0] & "_args_tuple_ref_for_goroutine")
 
 proc count_params(prc: NimNode): int {.compileTime.} =
     for i in prc[3].children:
@@ -139,6 +140,7 @@ macro goroutine*(prc: untyped): untyped =
         prc[4] = newNimNode(nnkPragma)
     addIdentIfAbsent(prc[4], "cdecl")
     # echo treeRepr(result)
+    # echo repr(result)
 
 macro gomain*(prc: untyped): untyped =
     result = prc
@@ -231,6 +233,7 @@ macro go*(c: untyped): untyped =
             )
         )
     # echo treeRepr(result)
+    # echo repr(result)
 
 {.push hint[XDeclaredButNotUsed]: off.}
 type
@@ -256,7 +259,7 @@ proc get_chan*[T](c: send_chan[T]): pointer =
     result = chan[T](c).get_chan()
 
 proc get_chan*[T](c: recv_chan[T]): pointer =
-    result = chan[T](c).get_chan()
+    result = cast[chan[T]](c).get_chan()
 
 ## converters
 
@@ -312,25 +315,25 @@ proc send*[T](c: chan[T], m: T) =
     chan_send(c.get_chan, cast[pointer](m_copy))
 
 proc send*[T](c: send_chan[T], m: T) =
-    chan[T](c).send(m)
+    cast[chan[T]](c).send(m)
 
 proc `<-`*[T](c: chan[T], m: T) =
     c.send(m)
 
 proc `<-`*[T](c: send_chan[T], m: T) =
-    chan[T](c) <- m
+    cast[chan[T]](c) <- m
 
 proc recv*[T](c: chan[T]): ref T {.discardable.} =
     result = cast[ref T](chan_recv(c.get_chan))
 
 proc recv*[T](c: recv_chan[T]): ref T {.discardable.} =
-    result = chan[T](c).recv()
+    result = cast[chan[T]](c).recv()
 
 proc `<-`*[T](c: chan[T]): T {.discardable.} =
     result = c.recv()[]
 
 proc `<-`*[T](c: recv_chan[T]): T {.discardable.} =
-    result = <- chan[T](c)
+    result = <- cast[chan[T]](c)
 
 proc recv2*[T](c: chan[T]): chan_recv2_result_typed[T] =
     var
@@ -343,20 +346,20 @@ proc recv2*[T](c: chan[T]): chan_recv2_result_typed[T] =
     result.ok = res.ok
 
 proc recv2*[T](c: recv_chan[T]): chan_recv2_result_typed[T] =
-    result = chan[T](c).recv2()
+    result = cast[chan[T]](c).recv2()
 
 proc `<--`*[T](c: chan[T]): (T, bool) =
     var res = c.recv2()
     result = (res.recv, res.ok)
 
 proc `<--`*[T](c: recv_chan[T]): (T, bool) =
-    result = <-- chan[T](c)
+    result = <-- cast[chan[T]](c)
 
 proc close*[T](c: chan[T]) =
     chan_close(c.get_chan)
 
 proc close*[T](c: send_chan[T]) =
-    chan[T](c).close()
+    cast[chan[T]](c).close()
 
 iterator items*[T](c: chan[T]): T =
     var m: T
@@ -367,7 +370,7 @@ iterator items*[T](c: chan[T]): T =
             yield m
 
 iterator items*[T](c: recv_chan[T]): T =
-    for m in chan[T](c):
+    for m in cast[chan[T]](c):
         yield m
 
 macro select*(s: untyped): untyped =

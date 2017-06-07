@@ -63,23 +63,24 @@ dumpTree:
             # break LOOP
         # else:
             # discard
-    select:
-        scase <-c1:
-            discard
-        scase (i2 = <-c2):
-            discard
-        scase ((i3, ok3) = <--c3):
-            discard
-        scase (li[0] = <-c4):
-            discard
-        scase (li[f()] = <-c5):
-            discard
-    
-    i2 = cast[ptr type(i2)](res.recv)[]
-    ok3 = res.recv_ok
-    li[0] = cast[ptr type(li[0])](res.recv)[]
-    li[f()] = cast[ptr type(li[f()])](res.recv)[]
+    # select:
+        # scase <-c1:
+            # discard
+        # scase (i2 = <-c2):
+            # discard
+        # scase ((i3, ok3) = <--c3):
+            # discard
+        # scase (li[0] = <-c4):
+            # discard
+        # scase (li[f()] = <-c5):
+            # discard
+
+    # i2 = cast[ptr type(i2)](res.recv)[]
+    # ok3 = res.recv_ok
+    # li[0] = cast[ptr type(li[0])](res.recv)[]
+    # li[f()] = cast[ptr type(li[f()])](res.recv)[]
     # static: doAssert(compiles((a, b) = <--c), "- the type must be 'chan' or 'recv_chan'")
+    go f(1)
 
 
 proc f6(args: pointer): int =
@@ -115,11 +116,19 @@ proc go_main() {.gomain.} =
 
     var c = make_chan(int, 1)
     echo c
+    echo c.capacity
     c <- 100
     var r = <-c
     echo r
     c = nil
     echo c
+
+    proc f10(c: chan[int]) {.goroutine.} = c <- 111
+    c = make_chan(int)
+    go f10(c)
+    r = <-c
+    echo "value from f10(): ", r
+
 
 golib_main()
 # not reached
