@@ -84,9 +84,9 @@ macro goroutine*(prc: untyped): untyped =
     result = prc
     ## checks
     if prc.kind != nnkProcDef:
-        error(callsite().lineinfo & ": Cannot transform this node kind into a goroutine. Proc definition expected.")
+        error(prc.lineinfo & ": Cannot transform this node kind into a goroutine. Proc definition expected.")
     if prc[3][0].kind != nnkEmpty:
-        error(callsite().lineinfo & ": Goroutines should not return anything.")
+        error(prc.lineinfo & ": Goroutines should not return anything.")
     if prc[3].len > 1:
         ## we have parameters, move them in a tuple definition before the proc definition
         var
@@ -385,11 +385,11 @@ macro select*(s: untyped): untyped =
         else:
             error(scase.lineinfo & ": Unsupported scase in select.")
     if rw_scases == 0:
-        error(callsite().lineinfo & ": No send or receive scases.")
+        error(s.lineinfo & ": No send or receive scases.")
     if default_scases > 1:
-        error(callsite().lineinfo & ": More than one 'default' scase.")
+        error(s.lineinfo & ": More than one 'default' scase.")
     var
-        var_prefix = callsite().lineinfo.replace('.', '_').replace('(', '_').replace(',', '_').replace(')', '_')
+        var_prefix = s.lineinfo.replace('.', '_').replace('(', '_').replace(',', '_').replace(')', '_')
         select_cases_var = ident(var_prefix & "select_cases")
         select_result_var = ident(var_prefix & "select_result")
         scase_no = -1
