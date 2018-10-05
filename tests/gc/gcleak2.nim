@@ -16,13 +16,14 @@ proc MakeObj(): TTestObj =
   result.x = "Hello"
   result.s = @[1,2,3]
 
-proc inProc() = 
+proc inProc() =
   for i in 1 .. 1_000_000:
-    when defined(gcMarkAndSweep):
-      GC_fullcollect()
+    when defined(gcMarkAndSweep) or defined(boehmgc) or defined(gogc):
+      if i mod 2000 == 0:
+        GC_fullcollect()
     var obj: TTestObj
     obj = MakeObj()
-    if getOccupiedMem() > 300_000: quit("still a leak!")
+    if getOccupiedMem() > 500_000: quit("still a leak!")
 
 proc go_main() {.gomain.} =
     inProc()

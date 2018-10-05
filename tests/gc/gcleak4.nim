@@ -15,7 +15,7 @@ type
   TPlusExpr = object of TExpr
     a, b: ref TExpr
     op2: string
-    
+
 method eval(e: ref TExpr): int {.base.} =
   # override this base method
   quit "to override!"
@@ -31,7 +31,7 @@ proc newLit(x: int): ref TLiteral =
   {.watchpoint: result.}
   result.x = x
   result.op1 = $getOccupiedMem()
-  
+
 proc newPlus(a, b: ref TExpr): ref TPlusExpr =
   new(result)
   {.watchpoint: result.}
@@ -39,7 +39,7 @@ proc newPlus(a, b: ref TExpr): ref TPlusExpr =
   result.b = b
   result.op2 = $getOccupiedMem()
 
-const Limit = when compileOption("gc", "markAndSweep"): 5*1024*1024 else: 500_000
+const Limit = when compileOption("gc", "markAndSweep") or compileOption("gc", "boehm") or compileOption("gc", "go"): 5*1024*1024 else: 500_000
 
 proc go_main() {.gomain.} =
     for i in 0..100_000:

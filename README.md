@@ -18,7 +18,7 @@
 | lambda goroutine | ``` go func(c chan int) { c <- 1 }(r) ``` | Unsupported. Workaround:<br> ```proc f(c: chan[int]) {.goroutine.} = c <- 1``` <br> ```go f(r)``` |
 | non-blocking <br> sleep | ``` time.Sleep(100 * time.Millisecond) ``` | ``` go_sleep_ms(100) ``` |
 | yield to another <br> goroutine | runtime.Gosched() | ``` go_yield() ``` |
-| run the goroutines <br> on all the available <br> CPU cores | ``` runtime.GOMAXPROCS(runtime.NumCPU()) ``` | ``` runtime_gomaxprocsfunc(runtime_ncpu) ``` |
+| run the goroutines <br> on all the available <br> CPU cores | ``` runtime.GOMAXPROCS(runtime.NumCPU()) ``` | ``` runtime_gomaxprocsfunc(getproccount()) ``` |
 | special code <br> layout | | ``` import golib ``` <br><br> ``` proc go_main() {.gomain.} = ``` <br> ``` # main code here ``` <br><br> ``` golib_main() ``` <br> ``` # not reached ``` |
 | compiler <br> parameters | | ``` # nim.cfg ``` <br> ``` --threads:on ``` <br> ``` --stackTrace:off ``` <br> ``` --passC:"--std=gnu99 -fsplit-stack" ``` <br> ``` --dynlibOverride:"go" ``` <br> ``` --passL:"-lgolib -lgo" ``` <br> ``` --gc:go ``` <br> ``` # or --gc:none ``` |
 

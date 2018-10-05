@@ -1,5 +1,5 @@
 %: %.nim nim.cfg src/golib.nim
-	$(NIM) c $<
+	$(NIM) c --verbosity:2 -d:release $<
 
 check_DATA = tests/bug234 \
 			 tests/tnew \

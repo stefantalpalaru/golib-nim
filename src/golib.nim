@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2017, Ștefan Talpalaru <stefantalpalaru@yahoo.com>
+# Copyright (c) 2015-2018, Ștefan Talpalaru <stefantalpalaru@yahoo.com>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -55,8 +55,8 @@ type
 ## libgo and golib symbols
 proc go_go*(f: goroutine_type; a3: pointer): pointer {.cdecl, importc: "__go_go", header: "<golib/golib.h>", discardable.}
 proc runtime_gomaxprocsfunc*(n: int32): int32 {.cdecl, importc: "runtime_gomaxprocsfunc", header: "<golib/golib.h>", discardable.}
-var runtime_ncpu* {.importc: "runtime_ncpu", header: "<golib/golib.h>".}: int32
-proc go_yield*() {.cdecl, importc: "runtime_gosched", header: "<golib/golib.h>".}
+proc getproccount*(): int32 {.cdecl, importc: "getproccount", header: "<golib/golib.h>".}
+proc go_yield*() {.cdecl, importc: "go_yield", header: "<golib/golib.h>".}
 proc golib_main_proc*(argc: cint; argv: cstringArray) {.cdecl, importc: "golib_main", header: "<golib/golib.h>".}
 proc chan_make*(a2: cint): pointer {.cdecl, importc: "chan_make", header: "<golib/golib.h>".}
 proc chan_send*(a2: pointer; a3: pointer) {.cdecl, importc: "chan_send", header: "<golib/golib.h>".}
@@ -67,6 +67,7 @@ proc chan_select*(a2: ptr chan_select_case; a3: cint): chan_select_result {.cdec
 proc go_sleep_ms*(a2: int64) {.cdecl, importc: "go_sleep_ms", header: "<golib/golib.h>".}
 
 ## macros
+{.push hint[GlobalVar]: off.}
 var
     gomain_proc {.compileTime.}: string
 
@@ -161,6 +162,7 @@ macro gomain*(prc: untyped): untyped =
 macro call_gomain_proc(): untyped = newCall(ident(gomain_proc))
 
 template golib_main*(): untyped =
+    {.push hint[GlobalVar]: off.}
     var
         cmdCount {.importc.}: cint
         cmdLine {.importc.}: cstringArray
@@ -171,14 +173,14 @@ template golib_main*(): untyped =
 
 macro go*(c: untyped): untyped =
     # echo treeRepr(c)
+    result = newStmtList()
     if len(c) == 1:
         c.insert(0, ident("go_go"))
         c.add(newNilLit())
-        result = c
+        result.add(c)
     else:
         ## we have parameters that need to be moved into a tuple reference,
-        ## casted as a pointer and passed to the proc
-        result = newStmtList()
+        ## cast as a pointer and passed to the proc
         var
             proc_args_tuple_ref = get_proc_args_tuple_ref(c)
         ## var procname_args_tuple_ref_for_goroutine: ref type((arg1, arg2, ...))
@@ -248,7 +250,7 @@ type
         ok*: bool
 {.pop.}
 
-## getter
+## getters
 proc get_chan*[T](c: chan[T]): pointer =
     if c == nil:
         result = nil

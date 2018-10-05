@@ -18,7 +18,7 @@ proc free*(some: ref TFoo) =
   alive_foos.del alive_foos.find(some.id)
 proc newFoo*(): ref TFoo =
   new result, free
-  
+
   result.id = foo_counter
   alive_foos.add result.id
   inc foo_counter
@@ -26,12 +26,12 @@ proc newFoo*(): ref TFoo =
 proc go_main() {.gomain.} =
     alive_foos = @[]
 
-    for i in 0 .. <10:
+    for i in 0 ..< 10:
      discard newFoo()
 
-    for i in 0 .. <10:
+    for i in 0 ..< 10:
       let f = newFoo()
-      f.fn = proc = 
+      f.fn = proc =
         echo f.id
 
     GC_fullcollect()

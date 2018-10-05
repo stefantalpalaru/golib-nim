@@ -15,14 +15,17 @@ proc MakeObj(): TTestObj =
   result.x = "Hello"
 
 proc go_main() {.gomain.} =
-    for i in 1 .. 1_000_000:
-      when defined(gcMarkAndSweep):
+  # var max_mem = 0
+  for i in 1 .. 1_000_000:
+    when defined(gcMarkAndSweep) or defined(boehmgc) or defined(gogc):
+      if i mod 3000 == 0:
         GC_fullcollect()
-      var obj = MakeObj()
-      if getOccupiedMem() > 300_000: quit("still a leak!")
-    #  echo GC_getstatistics()
+    var obj = MakeObj()
+    if getOccupiedMem() > 400_000: quit("still a leak!")
+    # if getOccupiedMem() > max_mem: max_mem = getOccupiedMem()
+  # echo max_mem
 
-    echo "no leak: ", getOccupiedMem()
+  echo "no leak: ", getOccupiedMem()
 
 
 golib_main()

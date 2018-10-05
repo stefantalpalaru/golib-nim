@@ -29,8 +29,10 @@ proc newArrayHolder: ref TArrayHolder =
 
 proc go_main() {.gomain.} =
   for i in 0..10000:
+    if i mod 2000 == 0:
+      GC_fullcollect()
     discard newArrayHolder()
-    
+
   if getOccupiedMem() > 300_000:
     echo "still a leak! ", getOccupiedMem()
     quit 1

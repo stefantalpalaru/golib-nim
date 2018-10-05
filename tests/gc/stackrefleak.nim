@@ -23,7 +23,7 @@ proc go_main() {.gomain.} =
     x = nil
     GC_fullCollect()
 
-  if getOccupiedMem() > 300_000:
+  if getOccupiedMem() > 400_000:
     echo "still a leak! ", getOccupiedMem()
     quit(1)
   else:

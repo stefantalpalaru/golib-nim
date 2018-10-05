@@ -2,11 +2,9 @@
 --stackTrace:off
 -p:"./src"
 #-p:"$lib/packages/golib"
-#-d:release
 --passC:"--std=gnu99 -fsplit-stack"
-#--passC:"--std=gnu99 -fsplit-stack -ggdb -O2"
-#--passC:"--std=gnu99 -fsplit-stack -ggdb"
 --dynlibOverride:"go"
---passL:"-lgolib -lgo"
+--passL:"-fuse-ld=gold -Wl,--no-as-needed -lgolib -lgo"
+--parallelBuild:0
 --gc:@NIMGC@
 
