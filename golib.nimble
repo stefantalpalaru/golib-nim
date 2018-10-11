@@ -7,5 +7,5 @@ license: "BSD"
 srcDir: "src"
 
 [Deps]
-Requires: "nim >= 0.13.0"
+Requires: "nim > 0.19.0"
 
