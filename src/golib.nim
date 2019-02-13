@@ -41,7 +41,7 @@ type
         chan*: pointer
         send*: pointer
 
-    chan_select_cases*{.unchecked.} = array[0..0, chan_select_case]
+    chan_select_cases* = UncheckedArray[chan_select_case]
 
     chan_select_result* {.importc: "chan_select_result".} = object
         chosen*: cint
